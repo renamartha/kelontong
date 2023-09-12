@@ -67,7 +67,7 @@ urlpatterns = [
 ]
 
 - Routing URL proyek
-Menambahkan impor fungsi include "from django.urls import path, include" dan menambahkan rute URL dalam variabel urlpatterns "path('main/', include('main.urls'))" pada berkas urls.py pada direktori proyek kelontong (bukan direktori aplikasi main)
+Menambahkan impor fungsi include "from django.urls import path, include" dan menambahkan rute URL dalam variabel urlpatterns "path('', include('main.urls'))" pada berkas urls.py pada direktori proyek kelontong (bukan direktori aplikasi main)
 
 - Menjalankan proyek dengan perintah "python manage.py runserver" dan halaman web dapat dilihat
 
