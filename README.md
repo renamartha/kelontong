@@ -1,4 +1,4 @@
-tautan adaptable : https://kelontong.adaptable.app/main/
+tautan adaptable : https://kelontong.adaptable.app
 tautan repositori : https://github.com/renamartha/kelontong.git
 
 1. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
