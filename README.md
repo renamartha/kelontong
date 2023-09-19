@@ -1,3 +1,4 @@
+TUGAS 2
 tautan adaptable : https://kelontong.adaptable.app
 tautan repositori : https://github.com/renamartha/kelontong.git
 
@@ -133,3 +134,230 @@ Referensi:
 * https://medium.com/@ankit.sinhal/mvc-mvp-and-mvvm-design-pattern-6e169567bbad
 * Tutorial 0 dan Tutorial 1
 
+TUGAS 3
+1. Apa perbedaan antara form POST dan form GET dalam Django?
+Jawab:
+POST digunakan saat ingin mengirim data yang perlu dikirimkan atau diperbarui di server. Dengan menggunakan POST, data yang dikirimkan tidak akan terlihat pada URL (lebih aman digunakan terutama jika mengirim data sensitif). Dalam membuat perubahan pada database juga harus menggunakan POST. Sedangkan pada GET, dilakukan penggabungan data yang kemudian dikirimkan ke sebuah string dan nantinya digunakan untuk membuat URL. Oleh karena itu, data akan terlihat pada URL, riwayat browser, dan log server (berbahaya jika digunakan untuk data sensitif). POST juga mempunyai ukuran data yang lebih besar daripada GET.
+
+2. Apa perbedaan utama antara XML, JSON, dan HTML dalam konteks pengiriman data?
+Jawab:
+XML, JSON, dan HTML merupakan format-format data yang digunakan dalam pengembangan web dan aplikasi. XML dan JSON digunakan untuk menyimpan dan transmisi data, sedangkan HTML berfokus pada bagaimana data ditampilkan (membuat tampilan halaman). XML dan JSON mampu memindahkan data antar server dan biasanya digunakan bersama dengan HTML. Secara struktur data, XML mempunyai struktur yang mana setiap elemen data diberi tanda kurung dengan tag deskriptif, elemen ini dapat disesuaikan dengan kebutuhan pengguna (custom) sehingga XML memiliki struktur yang fleksibel. Sedangkan, JSON memiliki struktur yang ringan karena terdiri dari pasangan key-value. 
+
+3. Mengapa JSON sering digunakan dalam pertukaran data antara aplikasi web modern?
+Jawab:
+JSON lebih sering digunakan dalam pertukaran data antara aplikasi web modern karena format/struktur yang digunakan ringan dan ringkas (memuat pasangan key-value), lebih mudah dibaca dan ditulis manusia, dan JSON lebih mudah diinterpretasikan/diuraikan dengan JavaScript.
+
+4. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+Jawab:
+a. Membuat input form untuk menambahkan objek model.
+(1) Pertama-tama, saya membuat skeleton sebagai kerangka views. Skeleton tersebut dibuat dengan:
+* Membuat folder "templates" pada folder/direktori utama. Pada folder "templates" tersebut dibuat sebuah file HTML bernama "base.html". File ini menjadi template untuk kerangka umum halaman web proyek ini.
+File HTML baru ini diisi dengan kode:
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        {% block meta %}
+        {% endblock meta %}
+    </head>
+
+    <body>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
+* Setelah membuat file tersebut, buka settings.py pada subdirektori atau direktori proyek "kelontong" dan menambahkan kode 'DIRS': [BASE_DIR / 'templates'] pada baris yang mengandung TEMPLATES.
+* Mengubah kode pada file "main.html" yang ada pada subdirektori "templates" pada direktori main dengan:
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Kelontong Inventory</h1>
+
+    <h5>Name:</h5>
+    <p>{{name}}</p>
+
+    <h5>Class:</h5>
+    <p>{{class}}</p>
+{% endblock content %}
+
+(2) Membuat form input dengan cara:
+* Membuat file baru bernama "forms.py" pada direktori "main". File tersebut diisi dengan kode:
+from django.forms import ModelForm
+from main.models import Item
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ["name", "amount", "harga", "description"]
+
+* Menambahkan import pada file "views.py" pada direktori "main".
+from django.http import HttpResponseRedirect
+from main.forms import ProductForm
+from django.urls import reverse
+from main.forms import Item
+
+* Membuat fungsi baru bernama "create_product" dengan parameter request
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_product.html", context)
+
+* Mengubah fungsi "show_main" pada file "views.py" menjadi:
+def show_main(request):
+   products = Item.objects.all()
+
+   context = {
+      	'name': 'Rena Martha Ulima',
+      	'class': 'PBP E',
+      	'products': products
+	'total_products': products.__len__()
+   }
+   
+   return render(request, "main.html", context)
+
+* Import fungsi "create_product" pada file "urls.py" di direktori main
+from main.views import show_main, create_product
+
+* Menambahkan path url ke "urlpatterns" yang ada pada file "urls.py" di direktori main untuk mengakses fungsi yang diimport
+path('create-product', create_product, name='create_product')
+
+* Membuat berkas HTML bernama "create_product.html" pada subdirektori templates di direktori main dan diisi dengan:
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>Add New Item</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Add Item"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+Ini untuk halaman form ketika akan menambahkan Item
+
+* Menambahkan kode berikut di dalam {% block content %} pada file "main.html"
+<table border="2"> # Menambahkan garis/border table
+          <tr>
+               <th>Name</th>
+               <th>Amount</th>
+               <th>Harga</th>
+               <th>Description</th>
+               <th>Date Added</th>
+          </tr>
+          
+          {% comment %} Cara memperlihatkan data produk {% endcomment %}
+          
+          <h5> Telah disimpan sebanyak {{total_products}} item <h5> #Menambahkan baris yang menunjukkan total
+								     produk yang ditambahkan  
+          {% for product in products %}
+               <tr>
+                    <td>{{product.name}}</td>
+                    <td>{{product.amount}}</td>
+                    <td>{{product.harga}}</td>
+                    <td>{{product.description}}</td>
+                    <td>{{product.tanggal}}</td>
+               </tr>
+          {% endfor %}
+     </table>
+          
+     <br />
+          
+          <a href="{% url 'main:create_product' %}">
+          <button>
+               Add New Item
+          </button>
+     </a>
+Penambahan kode ini ditujukan untuk menampilkan data item yang sudah ditambahkan dalam bentuk table dan membuat tombol "Add New Item" yang redirect ke halaman form.
+
+b. Menambahkan 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID dan melakukan routing URL untuk masing-masing views
+(1) Dalam format HTML (sudah dijelaskan pada bagian ke-2 "Membuat from input")
+
+(2) Dalam format XML 
+* Pertama-tama, saya menambahkan import di file "views.py" yang ada pada direktori main
+from django.http import HttpResponse
+from django.core import serializers
+
+* Pada file tersebut, membuat sebuah fungsi baru "show_xml" dengan parameter request
+def show_xml(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+* Menambahkan import fungsi "show_xml" di file "urls.py" pada direktori main
+from main.views import show_main, create_product, show_xml 
+
+* Menambahkan path urls dalam "urlspatterns"
+path('xml/', show_xml, name='show_xml')
+
+(3) Dalam format JSON (langkah yang dilakukan sama seperti format XML)
+* Membuat fungsi "show_json" dengan parameter request pada file "views.py" di direktori main
+def show_json(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+* Menambahkan import fungsi "show_json" di file "urls.py" pada direktori main
+from main.views import show_main, create_product, show_xml, show_json
+
+* Menambahkan path urls dalam "urlspatterns"
+path('json/', show_json, name='show_json')
+
+(4) Dalam format XML by ID
+* Membuat fungsi "show_xml_by_id" pada dengan parameter request dan id pada file "views.py" di direktori main
+def show_xml_by_id(request, id):
+    data = Item.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+* Menambahkan import fungsi "show_xml_by_id" di file "urls.py" pada direktori main
+from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id
+
+* Menambahkan path urls dalam "urlspatterns"
+path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id')
+
+(5) Dalam format JSON by ID (langkah sama seperti XML by ID)
+* Membuat fungsi "show_json_by_id" pada dengan parameter request dan id pada file "views.py" di direktori main
+def show_json_by_id(request, id):
+    data = Item.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+* Menambahkan import fungsi "show_json_by_id" di file "urls.py" pada direktori main 
+from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id 
+
+* Menambahkan path urls dalam "urlspatterns"
+path('json/<int:id>/', show_json_by_id, name='show_json_by_id')
+
+
+Screenshoot hasil akses URL pada Postman
+* HTML 
+![Alt text](html.jpg)
+* XML
+![Alt text](xml.jpg)
+* JSON
+![Alt text](json.jpg)
+* JSON BY ID
+![Alt text](json_by_id.jpg)
+* XML BY ID
+![Alt text](xml_by_id.jpg)
+
+Referensi:
+* https://docs.djangoproject.com/id/4.2/topics/forms/
+* https://www.geeksforgeeks.org/render-html-forms-get-post-in-django/
+* https://www.w3schools.com/js/js_json_xml.asp
+* https://www.deltaxml.com/blog/xml/whats-the-relationship-between-xml-json-html-and-the-internet/#:~:text=The%20differences%20between%20XML%2C%20JSON,how%20that%20data%20is%20displayed
+* Tutorial 3

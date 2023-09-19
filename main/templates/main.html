@@ -1,6 +1,42 @@
-<h1>Kelontong</h1>
+{% extends 'base.html' %}
 
-<h5>Name: </h5>
-<p>{{ name }}</p>
-<h5>Class: </h5>
-<p>{{ class }}</p> 
+{% block content %}
+     <h1>Kelontong Inventory</h1>
+
+     <h5>Name:</h5>
+     <p>{{name}}</p>
+
+     <h5>Class:</h5>
+     <p>{{class}}</p>
+
+     <table border="2">
+          <tr>
+               <th>Name</th>
+               <th>Amount</th>
+               <th>Harga</th>
+               <th>Description</th>
+               <th>Date Added</th>
+          </tr>
+          
+          {% comment %} Cara memperlihatkan data produk {% endcomment %}
+          
+          <h5> Telah disimpan sebanyak {{total_products}} item <h5>
+          {% for product in products %}
+               <tr>
+                    <td>{{product.name}}</td>
+                    <td>{{product.amount}}</td>
+                    <td>{{product.harga}}</td>
+                    <td>{{product.description}}</td>
+                    <td>{{product.tanggal}}</td>
+               </tr>
+          {% endfor %}
+     </table>
+          
+     <br />
+          
+          <a href="{% url 'main:create_product' %}">
+          <button>
+               Add New Item
+          </button>
+     </a>
+{% endblock content %}
