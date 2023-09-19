@@ -18,8 +18,9 @@
                <th>Date Added</th>
           </tr>
           
-          {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+          {% comment %} Cara memperlihatkan data produk {% endcomment %}
           
+          <h5> Telah disimpan sebanyak {{total_products}} item <h5>
           {% for product in products %}
                <tr>
                     <td>{{product.name}}</td>
@@ -35,7 +36,7 @@
           
           <a href="{% url 'main:create_product' %}">
           <button>
-               Add New Product
+               Add New Item
           </button>
      </a>
 {% endblock content %}

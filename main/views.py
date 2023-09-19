@@ -12,7 +12,8 @@ def show_main(request):
    context = {
       'name': 'Rena Martha Ulima',
       'class': 'PBP E',
-      'products': products
+      'products': products,
+      'total_products': products.__len__()
    }
    
    return render(request, "main.html", context)
