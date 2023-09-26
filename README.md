@@ -26,46 +26,46 @@ b. Membuat aplikasi dengan nama main pada proyek kelontong
 - Membuat template untuk tampilan
      * Membuat direktori baru bernama templates pada direktori aplikasi main
      * Membuat berkas baru bernama main.html pada direktori templates dan diisi dengan
-     <h1>Kelontong</h1>
+     <!-- <h1>Kelontong</h1>
 
      <h5>Name: </h5>
      <p>{{ name }}</p>
      <h5>Class: </h5>
-     <p>{{ class }}</p> 
+     <p>{{ class }}</p> -->
 - Membuat model
      * Mengisi berkas models.py pada direktori aplikasi main dengan 
-     from django.db import models
+     <!-- from django.db import models
 
      class Item(models.Model):
           name = models.CharField(max_length=255)
           amount = models.IntegerField()
           harga = models.IntegerField()
           tanggal = models.DateField(auto_now_add=True)
-          description = models.TextField()
+          description = models.TextField() -->
      * Melakukan migrasi model dengan menjalankan perintah "python manage.py makemigrations" untuk migrasi model dan menjalankan perintah "python manage.py migrate" untuk migrasi ke dalam basis data lokal
      notes: setiap melakukan perubahan pada model, perlu dilakukan migrasi
 - Menghubungkan view dengan template yang sudah dibuat
      * Mengisi berkas views.py yang ada pada direktori aplikasi main dengan  
-     from django.shortcuts import render
+     <!-- from django.shortcuts import render
 
      def show_main(request):
           context = {
                'name': 'Rena Martha Ulima',
                'class': 'PBP E'
           }
-          return render(request, "main.html", context)
+          return render(request, "main.html", context) -->
 
 c. Melakukan routing pada proyek agar dapat menjalankan aplikasi main
 - Routing URL aplikasi main
 Membuat berkas urls.py pada direktori aplikasi main dan diisi dengan 
-from django.urls import path
+<!-- from django.urls import path
 from main.views import show_main
 
 app_name = 'main'
 
 urlpatterns = [
     path('', show_main, name='show_main'),
-]
+] -->
 
 - Routing URL proyek
 Menambahkan impor fungsi include "from django.urls import path, include" dan menambahkan rute URL dalam variabel urlpatterns "path('', include('main.urls'))" pada berkas urls.py pada direktori proyek kelontong (bukan direktori aplikasi main)
@@ -83,7 +83,7 @@ f. Membuat sebuah routing pada urls.py aplikasi main untuk memetakan fungsi yang
 
 g. Membuat dan menjalankan test
 - Mengisi berkas tests.py pada direktori aplikasi main dengan 
-from django.test import TestCase, Client
+<!-- from django.test import TestCase, Client
 
 class mainTest(TestCase):
     def test_main_url_is_exist(self):
@@ -92,7 +92,7 @@ class mainTest(TestCase):
 
     def test_main_using_main_template(self):
         response = Client().get('/main/')
-        self.assertTemplateUsed(response, 'main.html')
+        self.assertTemplateUsed(response, 'main.html') -->
 
 menjalankan test dengan perintah "python manage.py test", dan tes berhasil.
 
@@ -153,7 +153,7 @@ a. Membuat input form untuk menambahkan objek model.
 (1) Pertama-tama, saya membuat skeleton sebagai kerangka views. Skeleton tersebut dibuat dengan:
 * Membuat folder "templates" pada folder/direktori utama. Pada folder "templates" tersebut dibuat sebuah file HTML bernama "base.html". File ini menjadi template untuk kerangka umum halaman web proyek ini.
 File HTML baru ini diisi dengan kode:
-{% load static %}
+<!-- {% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -170,10 +170,10 @@ File HTML baru ini diisi dengan kode:
         {% block content %}
         {% endblock content %}
     </body>
-</html>
+</html> -->
 * Setelah membuat file tersebut, buka settings.py pada subdirektori atau direktori proyek "kelontong" dan menambahkan kode 'DIRS': [BASE_DIR / 'templates'] pada baris yang mengandung TEMPLATES.
 * Mengubah kode pada file "main.html" yang ada pada subdirektori "templates" pada direktori main dengan:
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 
 {% block content %}
     <h1>Kelontong Inventory</h1>
@@ -183,26 +183,26 @@ File HTML baru ini diisi dengan kode:
 
     <h5>Class:</h5>
     <p>{{class}}</p>
-{% endblock content %}
+{% endblock content %} -->
 
 (2) Membuat form input dengan cara:
 * Membuat file baru bernama "forms.py" pada direktori "main". File tersebut diisi dengan kode:
-from django.forms import ModelForm
+<!-- from django.forms import ModelForm
 from main.models import Item
 
 class ProductForm(ModelForm):
     class Meta:
         model = Item
-        fields = ["name", "amount", "harga", "description"]
+        fields = ["name", "amount", "harga", "description"] -->
 
 * Menambahkan import pada file "views.py" pada direktori "main".
-from django.http import HttpResponseRedirect
+<!-- from django.http import HttpResponseRedirect
 from main.forms import ProductForm
 from django.urls import reverse
-from main.forms import Item
+from main.forms import Item -->
 
 * Membuat fungsi baru bernama "create_product" dengan parameter request
-def create_product(request):
+<!-- def create_product(request):
     form = ProductForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
@@ -210,10 +210,10 @@ def create_product(request):
         return HttpResponseRedirect(reverse('main:show_main'))
 
     context = {'form': form}
-    return render(request, "create_product.html", context)
+    return render(request, "create_product.html", context) -->
 
 * Mengubah fungsi "show_main" pada file "views.py" menjadi:
-def show_main(request):
+<!-- def show_main(request):
    products = Item.objects.all()
 
    context = {
@@ -223,16 +223,16 @@ def show_main(request):
 	'total_products': products.__len__()
    }
    
-   return render(request, "main.html", context)
+   return render(request, "main.html", context) -->
 
 * Import fungsi "create_product" pada file "urls.py" di direktori main
-from main.views import show_main, create_product
+<!-- from main.views import show_main, create_product -->
 
 * Menambahkan path url ke "urlpatterns" yang ada pada file "urls.py" di direktori main untuk mengakses fungsi yang diimport
 path('create-product', create_product, name='create_product')
 
 * Membuat berkas HTML bernama "create_product.html" pada subdirektori templates di direktori main dan diisi dengan:
-{% extends 'base.html' %} 
+<!-- {% extends 'base.html' %} 
 
 {% block content %}
 <h1>Add New Item</h1>
@@ -250,11 +250,11 @@ path('create-product', create_product, name='create_product')
     </table>
 </form>
 
-{% endblock %}
+{% endblock %} -->
 Ini untuk halaman form ketika akan menambahkan Item
 
 * Menambahkan kode berikut di dalam {% block content %} pada file "main.html"
-<table border="2"> # Menambahkan garis/border table
+<!-- <table border="2"> # Menambahkan garis/border table
           <tr>
                <th>Name</th>
                <th>Amount</th>
@@ -284,7 +284,7 @@ Ini untuk halaman form ketika akan menambahkan Item
           <button>
                Add New Item
           </button>
-     </a>
+     </a> -->
 Penambahan kode ini ditujukan untuk menampilkan data item yang sudah ditambahkan dalam bentuk table dan membuat tombol "Add New Item" yang redirect ke halaman form.
 
 b. Menambahkan 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID dan melakukan routing URL untuk masing-masing views
@@ -292,55 +292,55 @@ b. Menambahkan 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam f
 
 (2) Dalam format XML 
 * Pertama-tama, saya menambahkan import di file "views.py" yang ada pada direktori main
-from django.http import HttpResponse
-from django.core import serializers
+<!-- from django.http import HttpResponse
+from django.core import serializers -->
 
 * Pada file tersebut, membuat sebuah fungsi baru "show_xml" dengan parameter request
-def show_xml(request):
+<!-- def show_xml(request):
     data = Item.objects.all()
-    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml") -->
 
 * Menambahkan import fungsi "show_xml" di file "urls.py" pada direktori main
-from main.views import show_main, create_product, show_xml 
+<!-- from main.views import show_main, create_product, show_xml  -->
 
 * Menambahkan path urls dalam "urlspatterns"
-path('xml/', show_xml, name='show_xml')
+<!-- path('xml/', show_xml, name='show_xml') -->
 
 (3) Dalam format JSON (langkah yang dilakukan sama seperti format XML)
 * Membuat fungsi "show_json" dengan parameter request pada file "views.py" di direktori main
-def show_json(request):
+<!-- def show_json(request):
     data = Item.objects.all()
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json") -->
 
 * Menambahkan import fungsi "show_json" di file "urls.py" pada direktori main
-from main.views import show_main, create_product, show_xml, show_json
+<!-- from main.views import show_main, create_product, show_xml, show_json -->
 
 * Menambahkan path urls dalam "urlspatterns"
-path('json/', show_json, name='show_json')
+<!-- path('json/', show_json, name='show_json') -->
 
 (4) Dalam format XML by ID
 * Membuat fungsi "show_xml_by_id" pada dengan parameter request dan id pada file "views.py" di direktori main
-def show_xml_by_id(request, id):
+<!-- def show_xml_by_id(request, id):
     data = Item.objects.filter(pk=id)
-    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml") -->
 
 * Menambahkan import fungsi "show_xml_by_id" di file "urls.py" pada direktori main
-from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id
+<!-- from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id -->
 
 * Menambahkan path urls dalam "urlspatterns"
-path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id')
+<!-- path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id') -->
 
 (5) Dalam format JSON by ID (langkah sama seperti XML by ID)
 * Membuat fungsi "show_json_by_id" pada dengan parameter request dan id pada file "views.py" di direktori main
-def show_json_by_id(request, id):
+<!-- def show_json_by_id(request, id):
     data = Item.objects.filter(pk=id)
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json") -->
 
 * Menambahkan import fungsi "show_json_by_id" di file "urls.py" pada direktori main 
-from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id 
+<!-- from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id  -->
 
 * Menambahkan path urls dalam "urlspatterns"
-path('json/<int:id>/', show_json_by_id, name='show_json_by_id')
+<!-- path('json/<int:id>/', show_json_by_id, name='show_json_by_id') -->
 
 
 Screenshoot hasil akses URL pada Postman
@@ -361,3 +361,168 @@ Referensi:
 * https://www.w3schools.com/js/js_json_xml.asp
 * https://www.deltaxml.com/blog/xml/whats-the-relationship-between-xml-json-html-and-the-internet/#:~:text=The%20differences%20between%20XML%2C%20JSON,how%20that%20data%20is%20displayed
 * Tutorial 3
+
+TUGAS 4
+
+1. Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
+Jawab:
+Django UserCreationForm merupakan form bawaan dari Django yang membantu dan memudahkan dalam pembuatan formulir registrasi user dalam aplikasi web. Form ini digunakan untuk membuat objek user baru dalam basis data. Kelebihannya yaitu user dapat melakukan registrasi/pendaftaran dengan mudah di situs web tanpa pengembang web harus membuat kode dari awal serta memeriksa input dari user (apakah input seperti username dan password sudah sesuai dengan kriteria yang diberikan). Kekurangannya yaitu tampilan halaman registrasi perlu dirancang/didesain sendiri oleh pengembang (UserCreationForm hanya menyediakan pemrosesan saja)
+
+2. Apa perbedaan antara autentikasi dan otorisasi dalam konteks Django, dan mengapa keduanya penting?
+Jawab:
+Autentikasi merupakan sebuah proses yang mengidentifikasi dan memverifikasi identitas seseorang saat login (siapa dan apakah seseorang tersebut terdaftar). Sedangkan, otorisasi merupakan proses yang memverifikasi bahwa seseorang memiliki akses terhadap sesuatu dalam aplikasi perangkat lunak (terdapat pengaturan dan penentuan hak akses pengguna). Autentikasi dan otorisasi merupakan dua hal yang penting karena dengan adanya dua proses tersebut akan membantu melindungi aplikasi perangkat lunak dari seseorang yang mencoba melakukan tindakan yang tidak diizinkan (faktor keamanan) serta dapat mengatur akses tiap pengguna sehingga seseorang yang mungkin tidak memiliki izin untuk mengakses suatu bagian/data/fitur pada aplikasi, maka mereka tidak bisa mengaksesnya.
+
+3. Apa itu cookies dalam konteks aplikasi web, dan bagaimana Django menggunakan cookies untuk mengelola data sesi pengguna?
+Jawab:
+Cookies merupakan kumpulan informasi mengenai jejak kunjungan pengguna dan aktivitas pengguna dalam menelusuri website / kumpulan informasi yang diterima dari sebuah website dan disimpan pada sisi klien (biasanya browser)  dan mengirimkan kembali ke website yang dikunjungi. Pada saat membuat proyek Django, di berkas "settings.py" pada direktori proyek terdapat variabel yaitu "MIDDLEWARE" yang berisikan 'django.contrib.sessions.middleware.SessionMiddleware'. Middleware ini akan menangani session cookies. 
+
+4. Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai?
+Jawab:
+Penggunaan cookies secara default aman karena cookie ini bersifat sementara. Informasi akan disimpan dalam memori browser dan ketika browser ditutup, maka informasi cookie tersebut akan terhapus (sehingga tidak dapat digunakan untuk melacak informasi dalam jangka panjang). Cookies ini juga lebih aman karena hanya browser yang bisa mengakses.
+
+5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step
+Jawab:
+* Mengimplementasikan fungsi registrasi
+- Menambahkan import redirect, UserCreationForm, dan messages pada berkas views.py di direktori aplikasi.
+- Membuat fungsi bernama register dengan parameter request. Pada fungsi tersebut memanggil UserCreationForm() untuk membentuk formulir registrasi bawaan Django
+- Membuat berkas HTML bernama register.html pada subdirektori templates yang ada di direktori aplikasi. Ini adalah template untuk tampilan halaman saat melakukan registrasi.
+- Menambahkan import register pada berkas urls.py yang ada di direktori aplikasi. Setelah itu, menambahkan path url ke urlpatterns untuk bisa mengakses fungsi register yang sudah dibuat.
+
+* Mengimplementasikan fungsi login
+- Membuat fungsi bernama login_user dengan parameter request pada berkas views.py yang ada di direktori aplikasi
+-  Menambahkan import authenticate dan login pada berkas views.py
+- Berikut adalah isi dari fungsi login_user:
+<!-- def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('main:show_main')
+        else:
+            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+    context = {}
+    return render(request, 'login.html', context) -->
+- Membuat berkas bernama login.html pada subdirektori templates yang ada di direktori aplikasi. Ini adalah template untuk tampilan halaman saat melakukan login
+- Menambahkan import login_user pada berkas urls.py yang ada di direktori aplikasi. Setelah itu, menambahkan path url ke urlpatterns untuk bisa mengakses fungsi login_user yang sudah dibuat
+
+* Mengimplementasikan fungsi logout
+- Membuat fungsi bernama logout_user dengan parameter request pada berkas views.py yang ada di direktori aplikasi
+-  Menambahkan import logout pada berkas views.py
+- Berikut adalah isi dari fungsi logout_user:
+<!-- def logout_user(request):
+    logout(request)
+    return redirect('main:login') -->
+- Menambahkan kode berikut setelah button Add New Product
+<!-- <a href="{% url 'main:logout' %}">
+    <button>
+        Logout
+    </button>
+</a> -->
+- Menambahkan import logout_user pada berkas urls.py yang ada di direktori aplikasi. Setelah itu, menambahkan path url ke urlpatterns untuk bisa mengakses fungsi logout_user yang sudah dibuat
+
+* Restriksi akses halaman main
+- Menambahkan import login_required pada berkas views.py yang ada di direktori aplikasi
+- Menambahkan kode "@login_required(login_url='/login')" diatas fungsi show_main (agar main dapat diakses jika pengguna sudah login/terautentikasi)
+
+* Menghubungkan model Item dengan User
+- Menambahkan import "from django.contrib.auth.models import User" pada berkas models.py yang ada di direktori aplikasi
+- Menambahkan kode berikut pada model Item
+<!-- class Item(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE) -->
+- Mengubah kode pada fungsi create_product pada berkas views.py di direktori aplikasi menjadi:
+def create_product(request):
+<!-- form = ProductForm(request.POST or None)
+
+if form.is_valid() and request.method == "POST":
+    product = form.save(commit=False)
+    product.user = request.user
+    product.save()
+    return HttpResponseRedirect(reverse('main:show_main')) -->
+- Mengubah fungsi show_main menjadi:
+<!-- def show_main(request):
+    products = Product.objects.filter(user=request.user)
+
+    context = {
+        'name': request.user.username,
+        ... -->
+- Melakukan migrasi model (makemigrations lalu migrate)
+
+* Membuat dua akun pengguna dengan masing-masing tiga dummy data
+- Akun 1
+Register dengan username "rena" dan password "050204rena"
+Pada akun ini terdapat 3 data sesuai dengan model yang telah dibuat
+- Akun 2
+Register dengan username "test" dan password "testest123"
+Pada akun ini terdapat 3 data sesuai dengan model yang telah dibuat
+
+* Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama
+- Menambahkan 'username = request.user.username' pada context di fungsi show_main di berkas views.py pada direktori aplikasi (menampilkan detil pengguna yang sedang logged in)
+- Menambahkan import datetime di berkas views.py pada direktori aplikasi. 
+- Menambahkan fungsi untuk menambah cookie bernama last_login pada fungsi login_user. Potongan kode pada fungsi login_user diubah menjadi:
+<!-- ... 
+if user is not None:
+    login(request, user)
+    response = HttpResponseRedirect(reverse("main:show_main")) 
+    response.set_cookie('last_login', str(datetime.datetime.now()))
+    return response 
+    ...-->
+- Menambahkan kode 
+<!-- 'last_login': request.COOKIES['last_login'] --> ke variabel context di fungsi show_main pada berkas views.py
+- Mengubah fungsi logout_user pada berkas views.py menjadi:
+<!-- def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response -->
+- Menambahkan kode 
+<!-- <h5>Sesi terakhir login: {{ last_login }}</h5> --> pada berkas main.html
+
+* Membuat tombol dan fungsi untuk menambahkan dan mengurangi amount suatu item sebanyak satu
+- Membuat fungsi bernama tambah_jumlah_item dan kurangi_jumlah_item dengan parameter request dan id_item pada berkas views.py yang ada di direktori aplikasi
+- Berikut adalah isi dari fungsi tambah_jumlah_item:
+<!-- def tambah_jumlah_item(request, id_item):
+   product = get_object_or_404(Item, pk=id_item, user=request.user)
+   product.amount += 1
+   product.save()
+   return redirect('main:show_main') --> 
+- Berikut adalah isi dari fungsi kurangi_jumlah_item:
+<!-- def kurangi_jumlah_item(request, id_item):
+   product = get_object_or_404(Item, pk=id_item, user=request.user)
+   if product.amount > 0:
+      product.amount -= 1
+      product.save()
+   else:
+      messages.warning(request, 'Jumlah item sudah 0, tidak bisa melakukan pengurangan!')
+   return redirect('main:show_main') -->
+get_object_or_404 merupakan fungsi bawaan Django yang digunakan untuk mencari objek berdasarkan model tertentu, jika tidak ditemukan maka menampilkan halaman 404.
+- Menambahkan kode berikut pada main.html di for loop product in products
+    <!-- <td>
+        <a href="{% url 'main:kurangi_jumlah_item' product.id %}"> 
+            <button>-</button> # Ini tombol untuk mengurangi amount item tertentu sebanyak 1
+        </a>
+        <span>{{ product.amount }}</span>
+        <a href="{% url 'main:tambah_jumlah_item' product.id %}">
+            <button>+</button> # Ini tombol untuk menambahkan amount item tertentu sebanyak 1
+        </a>
+    </td> -->
+- Menambahkan import tambah_jumlah_item dan kurangi_jumlah_item pada berkas urls.py yang ada di direktori aplikasi. Setelah itu, menambahkan path url ke urlpatterns untuk bisa mengakses fungsi tambah_jumlah_item dan kurangi_jumlah_item yang sudah dibuat.
+
+* Membuat tombol dan fungsi untuk menghapus suatu objek
+- Membuat fungsi bernama hapus_item dengan parameter request dan id_item pada berkas views.py yang ada di direktori aplikasi
+- Berikut adalah isi dari fungsi hapus_item:
+<!-- def hapus_item(request, id_item):
+   product = get_object_or_404(Item, pk=id_item, user=request.user)
+   product.delete()
+   return redirect('main:show_main') -->
+get_object_or_404 merupakan fungsi bawaan Django yang digunakan untuk mencari objek berdasarkan model tertentu, jika tidak ditemukan maka menampilkan halaman 404.
+- Menambahkan kode berikut pada main.html di for loop product in products
+    <!-- <td>
+        <a href="{% url 'main:hapus_item' product.id %}">
+            <button>
+                Hapus Item #Tombol untuk hapus item
+            </button>
+        </a>
+    </td> -->
+- Menambahkan import hapus_item pada berkas urls.py yang ada di direktori aplikasi. Setelah itu, menambahkan path url ke urlpatterns untuk bisa mengakses fungsi hapus_item yang sudah dibuat.

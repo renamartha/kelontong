@@ -2,12 +2,9 @@
 
 {% block content %}
      <h1>Kelontong Inventory</h1>
+     <p>{{nama}} - {{class}}</p>
 
-     <h5>Name:</h5>
-     <p>{{name}}</p>
-
-     <h5>Class:</h5>
-     <p>{{class}}</p>
+     <h3>User login: {{username}}</h3> 
 
      <table border="2">
           <tr>
@@ -20,23 +17,56 @@
           
           {% comment %} Cara memperlihatkan data produk {% endcomment %}
           
-          <h5> Telah disimpan sebanyak {{total_products}} item <h5>
+          <h4> Telah disimpan sebanyak {{total_products}} item <h4>
           {% for product in products %}
                <tr>
                     <td>{{product.name}}</td>
-                    <td>{{product.amount}}</td>
+                    <td>
+                         <div class="amount-container">
+                              <a href="{% url 'main:kurangi_jumlah_item' product.id %}">
+                                   <button>-</button>
+                              </a>
+                              <span>{{ product.amount }}</span>
+                              <a href="{% url 'main:tambah_jumlah_item' product.id %}">
+                                  <button>+</button>
+                              </a>
+                          </div>
+                    </td>
                     <td>{{product.harga}}</td>
                     <td>{{product.description}}</td>
                     <td>{{product.tanggal}}</td>
+                    <td>
+                         <a href="{% url 'main:hapus_item' product.id %}">
+                              <button>
+                                   Hapus Item
+                              </button>
+                         </a>
+                    </td>
                </tr>
           {% endfor %}
      </table>
-          
+
+     {% if messages %}  
+     <ul>   
+          {% for message in messages %}  
+               <li>{{ message }}</li>  
+               {% endfor %}  
+     </ul>   
+     {% endif %}
+     
+     <h5>Sesi terakhir login Kelontong Inventory : {{ last_login }}</h5>
+
      <br />
           
-          <a href="{% url 'main:create_product' %}">
+     <a href="{% url 'main:create_product' %}">
           <button>
                Add New Item
           </button>
      </a>
+
+     <a href="{% url 'main:logout' %}">
+          <button>
+              Logout
+          </button>
+      </a>
 {% endblock content %}
