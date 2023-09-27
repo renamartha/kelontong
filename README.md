@@ -391,7 +391,7 @@ Jawab:
 * Mengimplementasikan fungsi login
 - Membuat fungsi bernama login_user dengan parameter request pada berkas views.py yang ada di direktori aplikasi
 -  Menambahkan import authenticate dan login pada berkas views.py
-- Berikut adalah isi dari fungsi login_user:
+- Berikut adalah isi dari fungsi login_user
 "def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -410,7 +410,7 @@ Jawab:
 * Mengimplementasikan fungsi logout
 - Membuat fungsi bernama logout_user dengan parameter request pada berkas views.py yang ada di direktori aplikasi
 -  Menambahkan import logout pada berkas views.py
-- Berikut adalah isi dari fungsi logout_user:
+- Berikut adalah isi dari fungsi logout_user
 "def logout_user(request):
     logout(request)
     return redirect('main:login')"
@@ -440,7 +440,7 @@ if form.is_valid() and request.method == "POST":
     product.user = request.user
     product.save()
     return HttpResponseRedirect(reverse('main:show_main'))"
-- Mengubah fungsi show_main menjadi:
+- Mengubah fungsi show_main menjadi
 "def show_main(request):
     products = Product.objects.filter(user=request.user)
 
@@ -460,7 +460,7 @@ Pada akun ini terdapat 3 data sesuai dengan model yang telah dibuat
 * Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama
 - Menambahkan 'username = request.user.username' pada context di fungsi show_main di berkas views.py pada direktori aplikasi (menampilkan detil pengguna yang sedang logged in)
 - Menambahkan import datetime di berkas views.py pada direktori aplikasi. 
-- Menambahkan fungsi untuk menambah cookie bernama last_login pada fungsi login_user. Potongan kode pada fungsi login_user diubah menjadi:
+- Menambahkan fungsi untuk menambah cookie bernama last_login pada fungsi login_user. Potongan kode pada fungsi login_user diubah menjadi
 "... 
 if user is not None:
     login(request, user)
@@ -470,7 +470,7 @@ if user is not None:
     ..."
 - Menambahkan kode 
 "'last_login': request.COOKIES['last_login']" ke variabel context di fungsi show_main pada berkas views.py
-- Mengubah fungsi logout_user pada berkas views.py menjadi:
+- Mengubah fungsi logout_user pada berkas views.py menjadi
 "def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
@@ -481,48 +481,48 @@ if user is not None:
 
 * Membuat tombol dan fungsi untuk menambahkan dan mengurangi amount suatu item sebanyak satu
 - Membuat fungsi bernama tambah_jumlah_item dan kurangi_jumlah_item dengan parameter request dan id_item pada berkas views.py yang ada di direktori aplikasi
-- Berikut adalah isi dari fungsi tambah_jumlah_item:
+- Berikut adalah isi dari fungsi tambah_jumlah_item
 "def tambah_jumlah_item(request, id_item):
     product = get_object_or_404(Item, pk=id_item, user=request.user)
     product.amount += 1
     product.save()
     return HttpResponseRedirect(reverse('main:show_main')) "
-- Berikut adalah isi dari fungsi kurangi_jumlah_item:
+- Berikut adalah isi dari fungsi kurangi_jumlah_item
 "def kurangi_jumlah_item(request, id_item):
-   product = get_object_or_404(Item, pk=id_item, user=request.user)
-   if product.amount > 0:
-      product.amount -= 1
-      product.save()
-   else:
-      messages.warning(request, 'Jumlah item sudah 0, tidak bisa melakukan pengurangan!')
+    product = get_object_or_404(Item, pk=id_item, user=request.user)
+    if product.amount > 0:
+        product.amount -= 1
+        product.save()
+    else:
+        messages.warning(request, 'Jumlah item sudah 0, tidak bisa melakukan pengurangan!')
     return HttpResponseRedirect(reverse('main:show_main'))"
 get_object_or_404 merupakan fungsi bawaan Django yang digunakan untuk mencari objek berdasarkan model tertentu, jika tidak ditemukan maka menampilkan halaman 404.
 - Menambahkan kode berikut pada main.html di for loop product in products
-    "<td>
-        <a href="{% url 'main:kurangi_jumlah_item' product.id %}"> 
-            <button>-</button> # Ini tombol untuk mengurangi amount item tertentu sebanyak 1
-        </a>
-        <span>{{ product.amount }}</span>
-        <a href="{% url 'main:tambah_jumlah_item' product.id %}">
-            <button>+</button> # Ini tombol untuk menambahkan amount item tertentu sebanyak 1
-        </a>
-    </td>"
+"<td>
+    <a href="{% url 'main:kurangi_jumlah_item' product.id %}"> 
+        <button>-</button> 
+    </a>
+    <span>{{ product.amount }}</span>
+    <a href="{% url 'main:tambah_jumlah_item' product.id %}">
+        <button>+</button> 
+    </a>
+</td>"
 - Menambahkan import tambah_jumlah_item dan kurangi_jumlah_item pada berkas urls.py yang ada di direktori aplikasi. Setelah itu, menambahkan path url ke urlpatterns untuk bisa mengakses fungsi tambah_jumlah_item dan kurangi_jumlah_item yang sudah dibuat.
 
 * Membuat tombol dan fungsi untuk menghapus suatu objek
 - Membuat fungsi bernama hapus_item dengan parameter request dan id_item pada berkas views.py yang ada di direktori aplikasi
-- Berikut adalah isi dari fungsi hapus_item:
+- Berikut adalah isi dari fungsi hapus_item
 "def hapus_item(request, id_item):
-   product = get_object_or_404(Item, pk=id_item, user=request.user)
-   product.delete()
-   return HttpResponseRedirect(reverse('main:show_main'))"
+    product = get_object_or_404(Item, pk=id_item, user=request.user)
+    product.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))"
 get_object_or_404 merupakan fungsi bawaan Django yang digunakan untuk mencari objek berdasarkan model tertentu, jika tidak ditemukan maka menampilkan halaman 404.
 - Menambahkan kode berikut pada main.html di for loop product in products
-    "<td>
-        <a href="{% url 'main:hapus_item' product.id %}">
-            <button>
-                Hapus Item #Tombol untuk hapus item
-            </button>
-        </a>
-    </td>"
+"<td>
+    <a href="{% url 'main:hapus_item' product.id %}">
+        <button>
+            Hapus Item 
+        </button>
+    </a>
+</td>"
 - Menambahkan import hapus_item pada berkas urls.py yang ada di direktori aplikasi. Setelah itu, menambahkan path url ke urlpatterns untuk bisa mengakses fungsi hapus_item yang sudah dibuat.
