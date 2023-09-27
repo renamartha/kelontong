@@ -75,7 +75,7 @@ def tambah_jumlah_item(request, id_item):
    product = get_object_or_404(Item, pk=id_item, user=request.user) #get_object_or_404 merupakan fungsi bawaan Django yang digunakan untuk mencari objek berdasarkan model tertentu, jika tidak ditemukan maka menampilkan halaman 404
    product.amount += 1
    product.save()
-   return redirect('main:show_main')
+   return HttpResponseRedirect(reverse('main:show_main'))
 
 def kurangi_jumlah_item(request, id_item):
    product = get_object_or_404(Item, pk=id_item, user=request.user)
@@ -84,12 +84,12 @@ def kurangi_jumlah_item(request, id_item):
       product.save()
    else:
       messages.info(request, f'Jumlah {product.name} sudah 0, tidak bisa melakukan pengurangan!')
-   return redirect('main:show_main')
+   return HttpResponseRedirect(reverse('main:show_main'))
 
 def hapus_item(request, id_item):
    product = get_object_or_404(Item, pk=id_item, user=request.user)
    product.delete()
-   return redirect('main:show_main')
+   return HttpResponseRedirect(reverse('main:show_main'))
 
 def show_xml(request):
    data = Item.objects.all()
