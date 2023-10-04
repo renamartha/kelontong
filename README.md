@@ -1,5 +1,4 @@
 # TUGAS 2
-<details>
 
 tautan adaptable : https://kelontong.adaptable.app
 tautan repositori : https://github.com/renamartha/kelontong.git
@@ -149,7 +148,6 @@ Referensi:
 <br>
 
 # TUGAS 3
-<details>
 
 ### 1. Apa perbedaan antara form POST dan form GET dalam Django?
 Jawab:
@@ -419,7 +417,6 @@ Referensi:
 * Tutorial 3
 
 # TUGAS 4
-<details>
 
 ## 1. Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
 Jawab:
@@ -617,7 +614,6 @@ get_object_or_404 merupakan fungsi bawaan Django yang digunakan untuk mencari ob
 <br>
 
 # TUGAS 5
-<details>
 
 ### 1.  Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
 Jawab:
