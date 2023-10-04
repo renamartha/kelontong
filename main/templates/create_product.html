@@ -1,7 +1,15 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-<h1>Add New Item</h1>
+
+<style> 
+    body {
+        background-color:beige;
+        font-family: "Times New Roman", Times, serif;
+    }
+</style>
+
+<h1><b>Add New Item</h1>
 
 <form method="POST">
     {% csrf_token %}

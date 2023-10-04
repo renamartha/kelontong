@@ -6,26 +6,41 @@
 
 {% block content %}
 
+<style> 
+     body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-color:beige;
+          font-family: "Times New Roman", Times, serif;
+     }
+     .login {
+          text-align: center;
+          font-family: "Times New Roman", Times, serif;
+     }
+</style>
+
 <div class = "login">
 
      <h1>Login</h1>
 
-     <form method="POST" action="">
+     <form method="POST" action="" >
           {% csrf_token %}
           <table>
                <tr>
                     <td>Username: </td>
-                    <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
+                    <td><br><input type="text" name="username" placeholder="Username" class="form-control"></br></td> 
                </tr>
                     
                <tr>
                     <td>Password: </td>
-                    <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
+                    <td><input type="password" name="password" placeholder="Password" class="form-control"></td> 
                </tr>
 
                <tr>
                     <td></td>
-                    <td><input class="btn login_btn" type="submit" value="Login"></td>
+                    <td><br><button type="submit" class="btn btn-primary">Login</button></td></td>
                </tr>
           </table>
      </form>
