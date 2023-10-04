@@ -91,6 +91,18 @@ def hapus_item(request, id_item):
    product.delete()
    return HttpResponseRedirect(reverse('main:show_main'))
 
+def edit_product(request, id):
+   product = Item.objects.get(pk = id)
+
+   form = ProductForm(request.POST or None, instance=product)
+
+   if form.is_valid() and request.method == "POST":
+      form.save()
+      return HttpResponseRedirect(reverse('main:show_main'))
+
+   context = {'form': form}
+   return render(request, "edit_product.html", context)
+
 def show_xml(request):
    data = Item.objects.all()
    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")

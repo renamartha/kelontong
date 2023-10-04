@@ -1,34 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-     <h1>Kelontong Inventory</h1>
-     <p>{{nama}} - {{class}}</p>
+<style> 
+     body {
+          background-color:beige;
+     }
 
-     <h3>User login: {{username}}</h3> 
+     #table_item tr:last-child td{
+          background-color: rgb(171, 169, 169);
+     }
+</style>
 
-     <table border="2">
-          <tr>
-               <th>Name</th>
-               <th>Amount</th>
-               <th>Harga</th>
-               <th>Description</th>
-               <th>Date Added</th>
+     <h1 class="text-center" style="font-family:Times New Roman, Times, serif"><b>Kelontong Inventory</b></h1>
+     <p class="text-center" style="font-family:Times New Roman, Times, serif">by {{nama}} - {{class}}</p>
+
+     <p style="font-family:Times New Roman, Times, serif">User login: <b>{{username}}</b></p> 
+
+     <table class="table table-bordered text-center" id="table_item">
+          <tr style="font-family:Times New Roman, Times, serif;  background-color:beige;">
+               <th scope="col">Name</th>
+               <th scope="col">Amount</th>
+               <th scope="col">Harga</th>
+               <th scope="col">Description</th>
+               <th scope="col">Date Added</th>
+               <th scope="col"></th>
           </tr>
           
           {% comment %} Cara memperlihatkan data produk {% endcomment %}
           
-          <h4> Telah disimpan sebanyak {{total_products}} item <h4>
+          <p style="font-family:Times New Roman, Times, serif"> Telah disimpan sebanyak <b>{{total_products}}</b> item </p>
           {% for product in products %}
-               <tr>
-                    <td>{{product.name}}</td>
+               <tr style="font-family:Times New Roman, Times, serif">
+                    <td scope="row">{{product.name}}</td>
                     <td>
                          <div class="amount-container">
                               <a href="{% url 'main:kurangi_jumlah_item' product.id %}">
-                                   <button>-</button>
+                                   <button type="button" class="btn btn-outline-warning">-</button>
                               </a>
                               <span>{{ product.amount }}</span>
                               <a href="{% url 'main:tambah_jumlah_item' product.id %}">
-                                  <button>+</button>
+                                  <button type="button" class="btn btn-outline-success">+</button>
                               </a>
                           </div>
                     </td>
@@ -36,8 +47,13 @@
                     <td>{{product.description}}</td>
                     <td>{{product.tanggal}}</td>
                     <td>
+                         <a href="{% url 'main:edit_product' product.pk %}">
+                              <button class="btn btn-info">
+                                   Edit Item
+                              </button>
+                         </a>
                          <a href="{% url 'main:hapus_item' product.id %}">
-                              <button>
+                              <button class="btn btn-danger">
                                    Hapus Item
                               </button>
                          </a>
@@ -53,20 +69,18 @@
                {% endfor %}  
      </ul>   
      {% endif %}
-     
-     <h5>Sesi terakhir login Kelontong Inventory : {{ last_login }}</h5>
-
-     <br />
           
      <a href="{% url 'main:create_product' %}">
-          <button>
+          <button class="btn btn-success"> <b>
                Add New Item
           </button>
      </a>
 
      <a href="{% url 'main:logout' %}">
-          <button>
+          <button class="btn btn-danger">
               Logout
-          </button>
-      </a>
+          </b></button>
+     </a>
+
+     <p style="font-family:Times New Roman, Times, serif"><br>Sesi terakhir login Kelontong Inventory : <b>{{ last_login }}</b></p>
 {% endblock content %}
