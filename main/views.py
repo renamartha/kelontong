@@ -1,6 +1,6 @@
 import datetime
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from main.forms import ProductForm
 from django.urls import reverse
 from main.forms import Item
@@ -10,6 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages  
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -118,4 +119,35 @@ def show_xml_by_id(request, id):
 def show_json_by_id(request, id):
    data = Item.objects.filter(pk=id)
    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def get_product_json(request):
+   product_item = Item.objects.filter(user=request.user)
+   return HttpResponse(serializers.serialize('json', product_item))
+
+@csrf_exempt
+def add_product_ajax(request):
+   if request.method == 'POST':
+      name = request.POST.get("name")
+      amount = request.POST.get("amount")
+      harga = request.POST.get("harga")
+      description = request.POST.get("description")
+      user = request.user
+
+      new_product = Item(name=name, amount=amount, harga=harga, description=description, user=user)
+      new_product.save()
+
+      return HttpResponse(b"CREATED", status=201)
+
+   return HttpResponseNotFound()
+
+@csrf_exempt
+def delete_ajax(request):
+   if request.method == 'DELETE':
+      id_Item = request.GET.get("id")
+      user = request.user
+      product = Item.objects.get(pk=id_Item, user=user)
+      product.delete()
+      return HttpResponse(b"DELETED", status=204)
+   return HttpResponseNotFound()
+
 # Create your views here.
