@@ -972,12 +972,12 @@ Fetch API adalah bagian asli dari JavaScript yang dikenal sebagai alternatif yan
 
 ### 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
 1. Pertama-tama saya membuat fungsi untuk mengembalikan data JSON yaitu dengan menambahkan fungsi pada views.py dengan nama get_product_json seperti berikut ini:
-```
+   ```
    def get_product_json(request):
    product_item = Item.objects.filter(user=request.user)
    return HttpResponse(serializers.serialize('json', product_item))
    ```
-2. Membuat fungsi baru di views.py untuk menambahkan produk baru dan menghapus produk dengan AJAX seperti berikut ini:
+3. Membuat fungsi baru di views.py untuk menambahkan produk baru dan menghapus produk dengan AJAX seperti berikut ini:
 Sebelumnya saya mengimport from django.views.decorators.csrf import csrf_exempt
    ```
    @csrf_exempt
@@ -995,9 +995,8 @@ Sebelumnya saya mengimport from django.views.decorators.csrf import csrf_exempt
       return HttpResponse(b"CREATED", status=201)
 
    return HttpResponseNotFound()
-
-@csrf_exempt
-def delete_ajax(request):
+   @csrf_exempt
+	def delete_ajax(request):
    if request.method == 'DELETE':
       id_Item = request.GET.get("id")
       user = request.user
@@ -1005,120 +1004,120 @@ def delete_ajax(request):
       product.delete()
       return HttpResponse(b"DELETED", status=204)
    return HttpResponseNotFound()
-```
+  ```
 3. Setelah menambahkan fungsi baru, saya menambahkan routing untuk ketika fungsi tersebut dengan melakukan import di urls.py dan membuat path url fungsi tersebut.
-```
-...
-path('get-product/', get_product_json, name='get_product_json'),
-path('create-ajax/', add_product_ajax, name='add_product_ajax'),
-path('delete-ajax/', delete_ajax, name='delete_ajax')   
-```
-
+	```
+	...
+	path('get-product/', get_product_json, name='get_product_json'),
+	path('create-ajax/', add_product_ajax, name='add_product_ajax'),
+	path('delete-ajax/', delete_ajax, name='delete_ajax')   
+	```
+	
 4. Setelah itu membuat tampilan data item dengan Fetch() API
 * Pertama saya menghapus bagian kode table pada main.html
 * Menambahkan kode
-```
-<div id="product_container" class="card-container"></div>
-```
+	```
+	<div id="product_container" class="card-container"></div>
+	```
 * Membuat block `<Script>` seperti berikut ini
-```
-<script>
-     async function getProducts() {
-          return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
-     }
-
-     async function refreshProducts() {
-          const products = await getProducts()
-          const productContainer = document.getElementById("product_container")
-          productContainer.innerHTML = ""
-
-          products.forEach((item) => {
-               const productCard = document.createElement("div")
-               productCard.className= "card"
-
-               if (item === products[products.length - 1]) {
-                    productCard.classList.add("last-card");
-               }
-
-               productCard.innerHTML = `
-                    <h2><b>${item.fields.name}</b></h2>
-                    <p><b>Amount:</b> 
-                         <a href="product/${item.pk}/kurangi_jumlah_item/" class="btn btn-outline-primary">-</a>
-                         <span id="amount_${item.pk}">${item.fields.amount}</span>
-                         <a href="product/${item.pk}/tambah_jumlah_item/" class="btn btn-outline-success">+</a>
-                    <p>
-                    <p><b>Harga:</b> ${item.fields.harga}</p>
-                    <p><b>Description:</b> ${item.fields.description}</p>
-                    <p><b>Tanggal:</b> ${item.fields.tanggal}</p>
-                    <div class="text-center mt-3">
-                         <a href="/edit-product/${item.pk}" class="btn btn-info"><b>Edit</b></a>
-                         <button class="btn btn-danger" onclick="deleteItem(${item.pk})"><b>Hapus</b></button>
-                    </div>
-               ` 
-               productContainer.appendChild(productCard)
-          })
-     }
-     refreshProducts()
-
-     function addProduct() {
-          fetch("{% url 'main:add_product_ajax' %}", {
-               method: "POST",
-               body: new FormData(document.querySelector('#form'))
-          }).then(refreshProducts)
-
-          document.getElementById("form").reset()
-          return false
-     }
-     document.getElementById("button_add").onclick = addProduct
-
-     function deleteItem(id_Item) {
-          fetch(`{% url 'main:delete_ajax' %}?id=${id_Item}`, {
-               method: "DELETE",
-          }).then(refreshProducts)
-          
-     }
-     
-</script>
-```
+	```
+	<script>
+	     async function getProducts() {
+	          return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
+	     }
+	
+	     async function refreshProducts() {
+	          const products = await getProducts()
+	          const productContainer = document.getElementById("product_container")
+	          productContainer.innerHTML = ""
+	
+	          products.forEach((item) => {
+	               const productCard = document.createElement("div")
+	               productCard.className= "card"
+	
+	               if (item === products[products.length - 1]) {
+	                    productCard.classList.add("last-card");
+	               }
+	
+	               productCard.innerHTML = `
+	                    <h2><b>${item.fields.name}</b></h2>
+	                    <p><b>Amount:</b> 
+	                         <a href="product/${item.pk}/kurangi_jumlah_item/" class="btn btn-outline-primary">-</a>
+	                         <span id="amount_${item.pk}">${item.fields.amount}</span>
+	                         <a href="product/${item.pk}/tambah_jumlah_item/" class="btn btn-outline-success">+</a>
+	                    <p>
+	                    <p><b>Harga:</b> ${item.fields.harga}</p>
+	                    <p><b>Description:</b> ${item.fields.description}</p>
+	                    <p><b>Tanggal:</b> ${item.fields.tanggal}</p>
+	                    <div class="text-center mt-3">
+	                         <a href="/edit-product/${item.pk}" class="btn btn-info"><b>Edit</b></a>
+	                         <button class="btn btn-danger" onclick="deleteItem(${item.pk})"><b>Hapus</b></button>
+	                    </div>
+	               ` 
+	               productContainer.appendChild(productCard)
+	          })
+	     }
+	     refreshProducts()
+	
+	     function addProduct() {
+	          fetch("{% url 'main:add_product_ajax' %}", {
+	               method: "POST",
+	               body: new FormData(document.querySelector('#form'))
+	          }).then(refreshProducts)
+	
+	          document.getElementById("form").reset()
+	          return false
+	     }
+	     document.getElementById("button_add").onclick = addProduct
+	
+	     function deleteItem(id_Item) {
+	          fetch(`{% url 'main:delete_ajax' %}?id=${id_Item}`, {
+	               method: "DELETE",
+	          }).then(refreshProducts)
+	          
+	     }
+	     
+	</script>
+	```
 
 * Membuat Modal sebagai form untuk nambahin produk
-  ```
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
-          <div class="modal-content">
-               <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Add New Product</b></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
-               <div class="modal-body">
-                    <form id="form" onsubmit="return false;">
-                         {% csrf_token %}
-                         <div class="mb-3">
-                              <label for="name" class="col-form-label"><b>Name:</b></label>
-                              <input type="text" class="form-control" id="name" name="name"></input>
-                         </div>
-                         <div class="mb-3">
-                              <label for="amount" class="col-form-label"><b>Amount:</b></label>
-                              <input type="number" class="form-control" id="amount" name="amount"></input>
-                         </div>
-                         <div class="mb-3">
-                              <label for="harga" class="col-form-label"><b>Harga:</b></label>
-                              <input type="number" class="form-control" id="harga" name="harga"></input>
-                         </div>
-                              <div class="mb-3">
-                              <label for="description" class="col-form-label"><b>Description:</b></label>
-                              <textarea class="form-control" id="description" name="description"></textarea>
-                         </div>
-                    </form>
-               </div>
-               <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Close</b></button>
-                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal"><b>Add Product</b></button>
-               </div>
-          </div>
-     </div>
-</div>
-```
+	  ```
+	  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	     <div class="modal-dialog">
+	          <div class="modal-content">
+	               <div class="modal-header">
+	                    <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Add New Product</b></h1>
+	                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	               </div>
+	               <div class="modal-body">
+	                    <form id="form" onsubmit="return false;">
+	                         {% csrf_token %}
+	                         <div class="mb-3">
+	                              <label for="name" class="col-form-label"><b>Name:</b></label>
+	                              <input type="text" class="form-control" id="name" name="name"></input>
+	                         </div>
+	                         <div class="mb-3">
+	                              <label for="amount" class="col-form-label"><b>Amount:</b></label>
+	                              <input type="number" class="form-control" id="amount" name="amount"></input>
+	                         </div>
+	                         <div class="mb-3">
+	                              <label for="harga" class="col-form-label"><b>Harga:</b></label>
+	                              <input type="number" class="form-control" id="harga" name="harga"></input>
+	                         </div>
+	                              <div class="mb-3">
+	                              <label for="description" class="col-form-label"><b>Description:</b></label>
+	                              <textarea class="form-control" id="description" name="description"></textarea>
+	                         </div>
+	                    </form>
+	               </div>
+	               <div class="modal-footer">
+	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Close</b></button>
+	                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal"><b>Add Product</b></button>
+	               </div>
+	          </div>
+	     </div>
+	</div>
+	```
 
 * Menambahkan button untuk menampilkan modal
   ```
