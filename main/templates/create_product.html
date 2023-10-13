@@ -4,12 +4,21 @@
 
 <style> 
     body {
+        display: grid;
         background-color:beige;
+        justify-content: center;
+        align-items: center;
         font-family: "Times New Roman", Times, serif;
+        margin-top: 30px;
+    }
+
+    #textNewItem {
+        text-align: center;
     }
 </style>
 
-<h1><b>Add New Item</h1>
+<h1 id="textNewItem"><b>Add New Item</h1>
+<br>
 
 <form method="POST">
     {% csrf_token %}

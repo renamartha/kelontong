@@ -3,84 +3,178 @@
 {% block content %}
 <style> 
      body {
-          background-color:beige;
+          background: rgb(245,245,135);
+          background: linear-gradient(0deg, rgba(245,245,135,1) 46%, rgba(242,242,195,1) 100%);
+          background-repeat: no-repeat;
+          padding: 10px;
      }
 
-     #table_item tr:last-child td{
+     .card-container {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+     }
+
+     .card {
+          background-color: rgb(220, 208, 171);
+          border: 2px solid;
+          border-radius: 10px;
+          padding: 15px;
+          margin-left: 10px;
+          margin-right: 10px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          font-family: 'Times New Roman', Times, serif;
+     }
+
+     .last-card {
+          background-color: rgb(190, 185, 185);
+     }
+
+     #product_table tr:last-child td{
           background-color: rgb(171, 169, 169);
      }
+
+     .btn {
+          margin-bottom: 10px;
+          font-family: 'Times New Roman', Times, serif;
+     }
+
+     .center {
+          display: grid;
+          place-items: center;
+          margin-bottom: 10px;
+     }
+
+     #exampleModal {
+          font-family: 'Times New Roman', Times, serif;
+     }
+
 </style>
 
-     <h1 class="text-center" style="font-family:Times New Roman, Times, serif"><b>Kelontong Inventory</b></h1>
-     <p class="text-center" style="font-family:Times New Roman, Times, serif">by {{nama}} - {{class}}</p>
+<h1 class="text-center" style="font-family:Times New Roman, Times, serif"><b>Kelontong Inventory</b></h1>
+<p class="text-center" style="font-family:Times New Roman, Times, serif">by {{nama}} - {{class}}</p>
 
-     <p style="font-family:Times New Roman, Times, serif">User login: <b>{{username}}</b></p> 
+<h5 style="font-family:Times New Roman, Times, serif">User login: <b>{{username}}</b></h5> 
 
-     <table class="table table-bordered text-center" id="table_item">
-          <tr style="font-family:Times New Roman, Times, serif;  background-color:beige;">
-               <th scope="col">Name</th>
-               <th scope="col">Amount</th>
-               <th scope="col">Harga</th>
-               <th scope="col">Description</th>
-               <th scope="col">Date Added</th>
-               <th scope="col"></th>
-          </tr>
-          
-          {% comment %} Cara memperlihatkan data produk {% endcomment %}
-          
-          <p style="font-family:Times New Roman, Times, serif"> Telah disimpan sebanyak <b>{{total_products}}</b> item </p>
-          {% for product in products %}
-               <tr style="font-family:Times New Roman, Times, serif">
-                    <td scope="row">{{product.name}}</td>
-                    <td>
-                         <div class="amount-container">
-                              <a href="{% url 'main:kurangi_jumlah_item' product.id %}">
-                                   <button type="button" class="btn btn-outline-warning">-</button>
-                              </a>
-                              <span>{{ product.amount }}</span>
-                              <a href="{% url 'main:tambah_jumlah_item' product.id %}">
-                                  <button type="button" class="btn btn-outline-success">+</button>
-                              </a>
-                          </div>
-                    </td>
-                    <td>{{product.harga}}</td>
-                    <td>{{product.description}}</td>
-                    <td>{{product.tanggal}}</td>
-                    <td>
-                         <a href="{% url 'main:edit_product' product.pk %}">
-                              <button class="btn btn-info">
-                                   Edit Item
-                              </button>
-                         </a>
-                         <a href="{% url 'main:hapus_item' product.id %}">
-                              <button class="btn btn-danger">
-                                   Hapus Item
-                              </button>
-                         </a>
-                    </td>
-               </tr>
-          {% endfor %}
-     </table>
+<div id="product_container" class="card-container"></div>
 
-     {% if messages %}  
-     <ul>   
-          {% for message in messages %}  
-               <li>{{ message }}</li>  
-               {% endfor %}  
-     </ul>   
-     {% endif %}
-          
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog">
+          <div class="modal-content">
+               <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Add New Product</b></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                         {% csrf_token %}
+                         <div class="mb-3">
+                              <label for="name" class="col-form-label"><b>Name:</b></label>
+                              <input type="text" class="form-control" id="name" name="name"></input>
+                         </div>
+                         <div class="mb-3">
+                              <label for="amount" class="col-form-label"><b>Amount:</b></label>
+                              <input type="number" class="form-control" id="amount" name="amount"></input>
+                         </div>
+                         <div class="mb-3">
+                              <label for="harga" class="col-form-label"><b>Harga:</b></label>
+                              <input type="number" class="form-control" id="harga" name="harga"></input>
+                         </div>
+                              <div class="mb-3">
+                              <label for="description" class="col-form-label"><b>Description:</b></label>
+                              <textarea class="form-control" id="description" name="description"></textarea>
+                         </div>
+                    </form>
+               </div>
+               <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Close</b></button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal"><b>Add Product</b></button>
+               </div>
+          </div>
+     </div>
+</div>
+
+{% if messages %}  
+<ul>   
+     {% for message in messages %}  
+          <li>{{ message }}</li>  
+          {% endfor %}  
+</ul>   
+{% endif %}
+
+<div class="center">
      <a href="{% url 'main:create_product' %}">
           <button class="btn btn-success"> <b>
                Add New Item
-          </button>
+          </b></button>
      </a>
 
+     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><b>Add Item by AJAX</b></button>
+
      <a href="{% url 'main:logout' %}">
-          <button class="btn btn-danger">
-              Logout
+          <button class="btn btn-danger"><b>
+               Logout
           </b></button>
      </a>
 
      <p style="font-family:Times New Roman, Times, serif"><br>Sesi terakhir login Kelontong Inventory : <b>{{ last_login }}</b></p>
+</div>
+
+<script>
+     async function getProducts() {
+          return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
+     }
+
+     async function refreshProducts() {
+          const products = await getProducts()
+          const productContainer = document.getElementById("product_container")
+          productContainer.innerHTML = ""
+
+          products.forEach((item) => {
+               const productCard = document.createElement("div")
+               productCard.className= "card"
+
+               if (item === products[products.length - 1]) {
+                    productCard.classList.add("last-card");
+               }
+
+               productCard.innerHTML = `
+                    <h2><b>${item.fields.name}</b></h2>
+                    <p><b>Amount:</b> 
+                         <a href="product/${item.pk}/kurangi_jumlah_item/" class="btn btn-outline-primary">-</a>
+                         <span id="amount_${item.pk}">${item.fields.amount}</span>
+                         <a href="product/${item.pk}/tambah_jumlah_item/" class="btn btn-outline-success">+</a>
+                    <p>
+                    <p><b>Harga:</b> ${item.fields.harga}</p>
+                    <p><b>Description:</b> ${item.fields.description}</p>
+                    <p><b>Tanggal:</b> ${item.fields.tanggal}</p>
+                    <div class="text-center mt-3">
+                         <a href="/edit-product/${item.pk}" class="btn btn-info"><b>Edit</b></a>
+                         <button class="btn btn-danger" onclick="deleteItem(${item.pk})"><b>Hapus</b></button>
+                    </div>
+               ` 
+               productContainer.appendChild(productCard)
+          })
+     }
+     refreshProducts()
+
+     function addProduct() {
+          fetch("{% url 'main:add_product_ajax' %}", {
+               method: "POST",
+               body: new FormData(document.querySelector('#form'))
+          }).then(refreshProducts)
+
+          document.getElementById("form").reset()
+          return false
+     }
+     document.getElementById("button_add").onclick = addProduct
+
+     function deleteItem(id_Item) {
+          fetch(`{% url 'main:delete_ajax' %}?id=${id_Item}`, {
+               method: "DELETE",
+          }).then(refreshProducts)
+          
+     }
+     
+</script>
 {% endblock content %}

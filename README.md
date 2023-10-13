@@ -951,3 +951,23 @@ Jawab:
 {% endblock %}
 ```
 
+<br>
+
+# TUGAS 6
+
+### 1. Jelaskan perbedaan antara asynchronous programming dengan synchronous programming.
+Pada asynchronous programming, beberapa proses bisa berjalan secara bersamaan tanpa menunggu proses lain selesai. Sedangkan, pada synchronous programming, program berjalan berdasarkan antrian eksekusinya (satu persatu proses dijalankan). Sehingga waktu eksekusi yang dibutuhkan pada asynchronous programming lebih singkat daripada synchronous programming. Pada asynchronous programming dapat mengirim beberapa request sekaligus (non blocking), sedangkan pada synchronous hanya mengirim satu request dan menunggu proses sebelum mengirim request lain.
+
+### 2. Dalam penerapan JavaScript dan AJAX, terdapat penerapan paradigma event-driven programming. Jelaskan maksud dari paradigma tersebut dan sebutkan salah satu contoh penerapannya pada tugas ini.
+Event-driven programming mengatur jalannya program/proses berdasarkan peristiwa yang sedang terjadi, merespons tindakan pengguna/user dengan menjalankan fungsi tertentu/event handler, seperti klik tombol. Program terdiri dari fungsi yang dikenal event handler. Ketika suatu event terjadi (seperti terjadi klik tombol), maka event handler akan dipanggil. Pada JavaScript dan AJAX, event-driven programming ini digunakan agar web menjadi responsif dan interaktif. Contoh penerapannya pada tugas 6 yaitu kode berikut:
+"document.getElementById("button_add").onclick = addProduct" (pada function addProduct di berkas main.html).
+addProduct dipanggil ketika terjadi event onclick (pengguna mengklik tombol)
+
+### 3. Jelaskan penerapan asynchronous programming pada AJAX.
+Penerapan AJAX memungkinkan terjadinya asynchronous programming antara browser dan server tanpa harus memuat ulang/refresh halaman web. Hal ini berarti AJAX dapat memproses tiap request yang diberikan ke server. 
+
+### 4. Pada PBP kali ini, penerapan AJAX dilakukan dengan menggunakan Fetch API daripada library jQuery. Bandingkanlah kedua teknologi tersebut dan tuliskan pendapat kamu teknologi manakah yang lebih baik untuk digunakan.
+
+
+### 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+
