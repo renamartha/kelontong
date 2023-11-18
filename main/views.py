@@ -149,5 +149,4 @@ def delete_ajax(request):
       product.delete()
       return HttpResponse(b"DELETED", status=204)
    return HttpResponseNotFound()
-
 # Create your views here.
