@@ -1,6 +1,7 @@
 import datetime
+import json
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from main.forms import ProductForm
 from django.urls import reverse
 from main.forms import Item
@@ -39,6 +40,7 @@ def create_product(request):
    context = {'form': form}
    return render(request, "create_product.html", context)
 
+@csrf_exempt
 def register(request):
    form = UserCreationForm()
 
@@ -51,6 +53,7 @@ def register(request):
    context = {'form':form}
    return render(request, 'register.html', context)
 
+@csrf_exempt
 def login_user(request):
    if request.method == 'POST':
       username = request.POST.get('username')
@@ -149,4 +152,24 @@ def delete_ajax(request):
       product.delete()
       return HttpResponse(b"DELETED", status=204)
    return HttpResponseNotFound()
+
+@csrf_exempt
+def create_product_flutter(request):
+   if request.method == 'POST':
+      
+      data = json.loads(request.body)
+
+      new_product = Item.objects.create(
+         user = request.user,
+         name = data["name"],
+         amount = int(data["amount"]),
+         harga = int(data["harga"]),
+         description = data["description"]
+      )
+
+      new_product.save()
+
+      return JsonResponse({"status": "success"}, status=200)
+   else:
+      return JsonResponse({"status": "error"}, status=401)
 # Create your views here.
